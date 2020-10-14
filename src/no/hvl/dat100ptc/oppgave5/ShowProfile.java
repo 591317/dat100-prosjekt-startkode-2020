@@ -1,4 +1,4 @@
-package no.hvl.dat100ptc.oppgave5;
+	package no.hvl.dat100ptc.oppgave5;
 
 import easygraphics.EasyGraphics;
 import no.hvl.dat100ptc.TODO;
@@ -47,11 +47,14 @@ public class ShowProfile extends EasyGraphics {
 	
 		int x = MARGIN,y;
 
-		// TODO - START
+		for (int i = 0; i < gpspoints.length; i++) {
+			setColor(255,30,30);
+			double yStopp = gpspoints [i].getElevation();
+			drawLine (i*2 + x, ybase, i*2 + x,(int) (ybase - yStopp));
+		}
+		
 
-		throw new UnsupportedOperationException(TODO.method());
 	
-		// TODO - SLUTT
 	}
 
 }

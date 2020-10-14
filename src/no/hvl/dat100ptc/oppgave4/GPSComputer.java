@@ -30,13 +30,14 @@ public class GPSComputer {
 	public double totalDistance() {
 
 		double distance = 0;
-
-		// TODO - START
-
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
-
+		
+		for(int i = 0; i < gpspoints.length-1; i++) {
+			double pointDistance = GPSUtils.distance(gpspoints[i], gpspoints[i+1]);
+			distance += pointDistance;
+		}
+		
+		return distance;
+		
 	}
 
 	// beregn totale høydemeter (i meter)
@@ -44,18 +45,30 @@ public class GPSComputer {
 
 		double elevation = 0;
 
-		// TODO - START
+		for (int i = 0; i < gpspoints.length-1; i++) {
+			double pointElevation = gpspoints[i+1].getElevation() - gpspoints[i].getElevation();
+		if(pointElevation > 0) {
+			elevation += pointElevation;
+		}
+		
+	}
+		
+		return elevation;
 
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+	
 
 	}
 
 	// beregn total tiden for hele turen (i sekunder)
 	public int totalTime() {
-
-		throw new UnsupportedOperationException(TODO.method());
+		
+		int tid = 0;
+		for(int i = 0; i < gpspoints.length-1; i++) {
+			tid += gpspoints[i+1].getTime() - gpspoints[i].getTime();
+			
+		}
+		
+	return tid;
 
 	}
 		
@@ -63,37 +76,36 @@ public class GPSComputer {
 
 	public double[] speeds() {
 		
-		// TODO - START		// OPPGAVE - START
+		double [] avgSpeed = new double [gpspoints.length-1];
+		for(int i = 0; i < gpspoints.length-1; i++) {
+			avgSpeed [i] = GPSUtils.speed(gpspoints[i], gpspoints[i+1]);
+		}
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		return avgSpeed;
+		
 
 	}
 	
 	public double maxSpeed() {
 		
 		double maxspeed = 0;
+		for (int i = 0; i < gpspoints.length; i++) {
+			maxspeed = GPSUtils.findMax(speeds());
+		}
+		return maxspeed;
 		
-		// TODO - START
-		
-		throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - SLUTT
-		
+
 	}
 
 	public double averageSpeed() {
 
 		double average = 0;
 		
-		// TODO - START
+		average = totalDistance() / 1000 / totalTime() * 3600;
 		
-		throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - SLUTT
-		
+		return average;
 	}
+	
 
 	/*
 	 * bicycling, <10 mph, leisure, to work or for pleasure 4.0 bicycling,
@@ -113,14 +125,36 @@ public class GPSComputer {
 		double kcal;
 
 		// MET: Metabolic equivalent of task angir (kcal x kg-1 x h-1)
-		double met = 0;		
-		double speedmph = speed * MS;
-
-		// TODO - START
 		
-		throw new UnsupportedOperationException(TODO.method());
+		double met = 0;
+		double hour = secs / 3600.0;
+		double speedmph = speed * MS;
+		
+		
+		if(speedmph < 10) {
+			met = 4.0;
+		}
+		
+		else if(speedmph >= 10 && speedmph < 12) {
+			met = 6.0;
+		}
+		else if (speedmph >= 12 && speedmph < 14) {
+			met = 8.0;
+		}
+		else if (speedmph >= 14 && speedmph < 16) {
+			met = 10.0;
+		}
+		else if (speedmph >= 16 && speedmph < 20) {
+			met = 12.0;
+		}
+		else
+			met = 16.0;
+		
+		kcal = weight * hour * met;
+		
+		return kcal;
+		
 
-		// TODO - SLUTT
 		
 	}
 
@@ -128,11 +162,9 @@ public class GPSComputer {
 
 		double totalkcal = 0;
 
-		// TODO - START
+		totalkcal = kcal(weight, totalTime(), averageSpeed());
 		
-		throw new UnsupportedOperationException(TODO.method());
-
-		// TODO - SLUTT
+		return totalkcal;
 		
 	}
 	
@@ -142,11 +174,13 @@ public class GPSComputer {
 
 		System.out.println("==============================================");
 
-		// TODO - START
-
-		throw new UnsupportedOperationException(TODO.method());
-		
-		// TODO - SLUTT
+		System.out.println("Total Time	:" + "	   " + GPSUtils.formatTime(totalTime()));
+		System.out.println("Total distance	:" + "	" + GPSUtils.formatDouble(totalDistance()/ 1000) + " km");
+		System.out.println("Total elevation	:" + "	" + GPSUtils.formatDouble(totalElevation()) + " m");
+		System.out.println("Max speed	:" + "	" + GPSUtils.formatDouble(maxSpeed()) + " km/t");
+		System.out.println("Average speed	:" + "	" + GPSUtils.formatDouble(averageSpeed()) + " km/t");
+		System.out.println("Energy		:" + "	" + GPSUtils.formatDouble(totalKcal(WEIGHT)) + " kcal");
+	
 		
 	}
 
